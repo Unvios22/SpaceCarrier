@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace Controllers {
+namespace Logic.Interface {
 	public class CameraController : MonoBehaviour {
 		
-		[SerializeField] private Camera camera;
+		[SerializeField] private Camera playerCamera;
 		[SerializeField] private float dragSpeed = 1;
 		[SerializeField] private float zoomSpeed = 1;
 		
@@ -38,25 +39,25 @@ namespace Controllers {
 
 		private void ReadPlayerInput() {
 			//TODO: refactor using dedicated input class & the new Unity input system
-			_isMouseDown = Input.GetKey(KeyCode.Mouse0);
+			_isMouseDown = Input.GetKey(KeyCode.Mouse2);
 			var mouseScreenPos = Input.mousePosition;
-			_mousePos = camera.ScreenToWorldPoint(mouseScreenPos);
+			_mousePos = playerCamera.ScreenToWorldPoint(mouseScreenPos);
 
 			_mouseScroll = Input.mouseScrollDelta;
 		}
 
 		private void ApplyCameraDrag() {
 			Vector2 moveVector = _dragOrigin - _mousePos;
-			camera.transform.position += new Vector3(moveVector.x, moveVector.y, 0f) * dragSpeed;
+			playerCamera.transform.position += new Vector3(moveVector.x, moveVector.y, 0f) * dragSpeed;
 		}
 
 		private void ApplyCameraZoom() {
 			var zoomChange = _mouseScroll.y * zoomSpeed * -1;
-			var cameraSize = camera.orthographicSize;
+			var cameraSize = playerCamera.orthographicSize;
 			var desiredZoom = cameraSize + zoomChange;
 			desiredZoom = Mathf.Clamp(desiredZoom, minZoom, maxZoom);
 
-			camera.orthographicSize = desiredZoom;
+			playerCamera.orthographicSize = desiredZoom;
 		}
 	}
 }
