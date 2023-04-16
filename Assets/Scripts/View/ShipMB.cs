@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Model;
 using Ships;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace View {
-	public class ShipMB : SerializedMonoBehaviour {
+	public class ShipMB : SerializedMonoBehaviour, ISelectableEntity {
 		[SerializeField] private Ship _destroyer;
 
 		private void Start() {

@@ -1,5 +1,5 @@
 ﻿namespace Model {
-	public class ISelectableEntity {
+	public interface ISelectableEntity {
 		
 	}
 }
