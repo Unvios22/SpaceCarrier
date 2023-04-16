@@ -11,13 +11,15 @@ namespace Logic.Interface {
 		[SerializeField] private Camera playerCamera;
 		[SerializeField] private SelectionBoxController selectionBoxController;
 		[SerializeField] private SelectableEntityPhysicsCaster selectableEntityPhysicsCaster;
+
+		private const float DragDistanceToStartBoxSelection = 2f;
 		
 		private Vector2 _mousePos;
 		private Vector2 _selectionOrigin;
 		
 		private bool _isMouseDown;
 		private bool _isSelecting;
-		
+		private bool _isDrawingBox;
 		private bool _isSelectiveSelection;
 		
 		private Vector3[] _selectionBoxVertices;
@@ -32,17 +34,29 @@ namespace Logic.Interface {
 		private void Update() {
 			ReadPlayerInput();
 			
+			//TODO: refactor this as a state machine or at least an enum
+			
 			if (_isMouseDown && !_isSelecting) {
 				_selectionOrigin = _mousePos;
 				_isSelecting = true;
 			}
+			
 			if (_isSelecting) {
+				var distanceDragged = Vector2.Distance(_selectionOrigin, _mousePos);
+				if (distanceDragged > DragDistanceToStartBoxSelection) {
+					_isDrawingBox = true;
+				}
+			}
+
+			if (_isDrawingBox) {
 				DrawSelectionBox();
 			}
+			
 			if (_isSelecting && !_isMouseDown) {
-				_isSelecting = false;
-				HandleObjectSelection();
+				HandleEntitySelection();
 				ClearSelectionBox();
+				_isSelecting = false;
+				_isDrawingBox = false;
 			}
 		}
 
@@ -64,8 +78,14 @@ namespace Logic.Interface {
 			selectionBoxController.SetSelectionBoxVertices(_selectionBoxVertices);
 		}
 
-		private void HandleObjectSelection() {
-			var entitiesInSelection = DetermineEntitiesInSelectionBox();
+		private void HandleEntitySelection() {
+			List<ISelectableEntity> entitiesInSelection;
+			if (_isDrawingBox) {
+				entitiesInSelection = DoBoxSelection();
+			} else {
+				entitiesInSelection = DoClickSelection();
+			}
+			
 			if (_isSelectiveSelection) {
 				HandleSelectiveSelection(entitiesInSelection);
 			} else {
@@ -73,6 +93,18 @@ namespace Logic.Interface {
 			}
 		}
 
+		private List<ISelectableEntity> DoBoxSelection() {
+			var colliderVertices = _selectionBoxVertices.Select(x => (Vector2)x).ToArray();
+			var castDirection = playerCamera.transform.forward;
+			return selectableEntityPhysicsCaster.CastPolygonForSelectableEntities(colliderVertices, castDirection);
+		}
+
+		private List<ISelectableEntity> DoClickSelection() {
+			var raycastOrigin = _mousePos;
+			var raycastDirection = playerCamera.transform.forward;
+			return selectableEntityPhysicsCaster.CastRayForSelectableEntities(raycastOrigin, raycastDirection);
+		}
+		
 		private void HandleSelectiveSelection(List<ISelectableEntity> entitiesInSelection) {
 			if (entitiesInSelection.IsNullOrEmpty()) {
 				return;
@@ -100,35 +132,7 @@ namespace Logic.Interface {
 				}
 			}
 		}
-
-		private List<ISelectableEntity> DetermineEntitiesInSelectionBox() {
-			var hitResults = CastSelectionBoxToWorldSpace();
-			if (hitResults.IsNullOrEmpty()) {
-				return new List<ISelectableEntity>();
-			}
-			var entitiesInSelection= FilterHitResults(hitResults);
-			return entitiesInSelection;
-		}
 		
-		private List<RaycastHit2D> CastSelectionBoxToWorldSpace() {
-			var colliderVertices = _selectionBoxVertices.Select(x => (Vector2)x).ToArray();
-			var castDirection = playerCamera.transform.forward;
-			
-			return selectableEntityPhysicsCaster.CastPolygonToWorldSpace(colliderVertices, castDirection);
-		}
-
-		private List<ISelectableEntity> FilterHitResults(List<RaycastHit2D> hitResults) {
-			var selectedEntities = new List<ISelectableEntity>();
-			
-			foreach (var result in hitResults) {
-				var resultSelectableEntities = result.transform.GetComponentsInChildren<ISelectableEntity>();
-				if (resultSelectableEntities.Length != 0) {
-					resultSelectableEntities.ForEach(x => selectedEntities.Add(x));
-				}
-			}
-			return selectedEntities;
-		}
-
 		private void ClearSelectionBox() {
 			selectionBoxController.ClearSelectionVertices();
 		}
