@@ -64,6 +64,7 @@ namespace Logic.Interface {
 		private void DetermineSelectedObjects() {
 			var hitResults = CastSelectionToWorldSpace();
 			if (hitResults.IsNullOrEmpty()) {
+				_currentlySelectedEntities.Clear();
 				return;
 			}
 			var selectedEntities= FilterHitResults(hitResults);
