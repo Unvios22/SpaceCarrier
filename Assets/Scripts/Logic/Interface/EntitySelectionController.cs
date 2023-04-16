@@ -18,6 +18,8 @@ namespace Logic.Interface {
 		private bool _isMouseDown;
 		private bool _isSelecting;
 		
+		private bool _isSelectiveSelection;
+		
 		private Vector3[] _selectionBoxVertices;
 		
 		[ShowInInspector]
@@ -39,7 +41,7 @@ namespace Logic.Interface {
 			}
 			if (_isSelecting && !_isMouseDown) {
 				_isSelecting = false;
-				DetermineSelectedObjects();
+				HandleObjectSelection();
 				ClearSelectionBox();
 			}
 		}
@@ -49,6 +51,7 @@ namespace Logic.Interface {
 			_isMouseDown = Input.GetKey(KeyCode.Mouse0);
 			var mouseScreenPos = Input.mousePosition;
 			_mousePos = playerCamera.ScreenToWorldPoint(mouseScreenPos);
+			_isSelectiveSelection = Input.GetKey(KeyCode.LeftShift);
 		}
 
 		private void DrawSelectionBox() {
@@ -61,17 +64,53 @@ namespace Logic.Interface {
 			selectionBoxController.SetSelectionBoxVertices(_selectionBoxVertices);
 		}
 
-		private void DetermineSelectedObjects() {
-			var hitResults = CastSelectionToWorldSpace();
-			if (hitResults.IsNullOrEmpty()) {
-				_currentlySelectedEntities.Clear();
+		private void HandleObjectSelection() {
+			var entitiesInSelection = DetermineEntitiesInSelectionBox();
+			if (_isSelectiveSelection) {
+				HandleSelectiveSelection(entitiesInSelection);
+			} else {
+				HandleNonselectiveSelection(entitiesInSelection);
+			}
+		}
+
+		private void HandleSelectiveSelection(List<ISelectableEntity> entitiesInSelection) {
+			if (entitiesInSelection.IsNullOrEmpty()) {
 				return;
 			}
-			var selectedEntities= FilterHitResults(hitResults);
-			_currentlySelectedEntities = selectedEntities;
+			InvertSelectionStatus(entitiesInSelection);
+			
+			//TODO: refactor to be more adaptable - if selective and there are both selected and unselected units in selection, only add more
+			//if selective and only already selected units are in selection, then remove them
+		}
+
+		private void HandleNonselectiveSelection(List<ISelectableEntity> entitiesInSelection) {
+			if (entitiesInSelection.IsNullOrEmpty()) {
+				_currentlySelectedEntities.Clear();
+			} else {
+				_currentlySelectedEntities = entitiesInSelection;
+			}
+		}
+
+		private void InvertSelectionStatus(List<ISelectableEntity> entities) {
+			foreach (var entity in entities) {
+				if (_currentlySelectedEntities.Contains(entity)) {
+					_currentlySelectedEntities.Remove(entity);
+				} else {
+					_currentlySelectedEntities.Add(entity);
+				}
+			}
+		}
+
+		private List<ISelectableEntity> DetermineEntitiesInSelectionBox() {
+			var hitResults = CastSelectionBoxToWorldSpace();
+			if (hitResults.IsNullOrEmpty()) {
+				return new List<ISelectableEntity>();
+			}
+			var entitiesInSelection= FilterHitResults(hitResults);
+			return entitiesInSelection;
 		}
 		
-		private List<RaycastHit2D> CastSelectionToWorldSpace() {
+		private List<RaycastHit2D> CastSelectionBoxToWorldSpace() {
 			var colliderVertices = _selectionBoxVertices.Select(x => (Vector2)x).ToArray();
 			var castDirection = playerCamera.transform.forward;
 			
