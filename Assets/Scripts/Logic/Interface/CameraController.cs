@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Logic.Interface {
 	public class CameraController : MonoBehaviour {
@@ -10,6 +9,8 @@ namespace Logic.Interface {
 		
 		[SerializeField] private float minZoom = 3f;
 		[SerializeField] private float maxZoom = 35f;
+
+		[SerializeField] private float zoomCursorConvergenceStrength = 0.1f;
 
 		private Vector2 _mousePos;
 		private Vector2 _mouseScroll;
@@ -33,8 +34,12 @@ namespace Logic.Interface {
 			if (_isPanning && !_isMouseDown) {
 				_isPanning = false;
 			}
-
+			
 			ApplyCameraZoom();
+			
+			if (_mouseScroll.y > 0f) {
+				ApplyCameraZoomMove();
+			}
 		}
 
 		private void ReadPlayerInput() {
@@ -54,10 +59,19 @@ namespace Logic.Interface {
 		private void ApplyCameraZoom() {
 			var zoomChange = _mouseScroll.y * zoomSpeed * -1;
 			var cameraSize = playerCamera.orthographicSize;
+			
 			var desiredZoom = cameraSize + zoomChange;
 			desiredZoom = Mathf.Clamp(desiredZoom, minZoom, maxZoom);
-
+			
 			playerCamera.orthographicSize = desiredZoom;
+		}
+
+		private void ApplyCameraZoomMove() {
+
+			var cameraPos = playerCamera.transform.position;
+			var desiredPosition = Vector2.Lerp(cameraPos, _mousePos, zoomCursorConvergenceStrength);
+			
+			playerCamera.transform.position = new Vector3(desiredPosition.x, desiredPosition.y, cameraPos.z);
 		}
 	}
 }
