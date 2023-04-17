@@ -25,10 +25,18 @@ namespace Logic.Interface {
 		private Vector3[] _selectionBoxVertices;
 		
 		[ShowInInspector]
-		private List<ISelectableEntity> _currentlySelectedEntities;
+		private SubjectCallbackList<ISelectableEntity> _currentlySelectedEntities;
 
 		private void Start() {
-			_currentlySelectedEntities = new List<ISelectableEntity>();
+			_currentlySelectedEntities = new SubjectCallbackList<ISelectableEntity>(EnableSelectionMarker, DisableSelectionMarker);
+		}
+
+		private void EnableSelectionMarker(ISelectableEntity entity) {
+			entity.DisplaySelectionMarker();
+		}
+
+		private void DisableSelectionMarker(ISelectableEntity entity) {
+			entity.HideSelectionMarker();
 		}
 
 		private void Update() {
@@ -119,7 +127,9 @@ namespace Logic.Interface {
 			if (entitiesInSelection.IsNullOrEmpty()) {
 				_currentlySelectedEntities.Clear();
 			} else {
-				_currentlySelectedEntities = entitiesInSelection;
+				//TODO: refactor list declaration to allow better list initialization
+				_currentlySelectedEntities.Clear();
+				entitiesInSelection.ForEach(x => _currentlySelectedEntities.Add(x));
 			}
 		}
 
