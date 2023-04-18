@@ -1,9 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using EntityData;
 using Logic.Systems;
 using Sirenix.OdinInspector;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace Model {
 	[Serializable]
@@ -14,6 +16,11 @@ namespace Model {
 		[ShowInInspector] private float _speed;
 		[ShowInInspector] private List<Modifier<IModifierAffectable>> _modifiers;
 
+		public WorldEntity() {
+			_position = new Position();
+			_modifiers = new List<Modifier<IModifierAffectable>>();
+		}
+		
 		public void AddModifier(Modifier<IModifierAffectable> modifier) {
 			_modifiers.Add(modifier);
 		}
@@ -22,6 +29,14 @@ namespace Model {
 			_modifiers.Remove(modifier);
 		}
 
+		public void SetRandomBearing() {
+			Bearing = Random.Range(0, 360);
+		}
+
+		public void SetRandomSpeed(float min, float max) {
+			Speed = Random.Range(min, max);
+		}
+		
 		public Position Position {
 			get => _position;
 			set => _position = value;

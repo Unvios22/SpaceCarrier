@@ -1,19 +1,16 @@
 ﻿using Installers.Factories;
 using Model;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
 namespace View {
-	public class ShipMB : SerializedMonoBehaviour, ISelectableEntity {
+	public class ShipMB : WorldEntityMB<Ship>, ISelectableEntity {
 		
 		[SerializeField] private GameObject selectionMarker;
-		
-		private Ship _ship;
 
 		[Inject]
 		private void Init(ShipFactory factory) {
-			_ship = factory.Create();
+			Entity = factory.Create();
 		}
 
 		private void Start() {

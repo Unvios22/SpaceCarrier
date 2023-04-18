@@ -384,6 +384,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestShip(Green)
       objectReference: {fileID: 0}
+    - target: {fileID: 407611041613852479, guid: a1f08408633d9e246a24db86e6b317e9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2608466748762800986, guid: a1f08408633d9e246a24db86e6b317e9,
         type: 3}
       propertyPath: m_Color.b
@@ -1145,6 +1150,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestShip(Red)
+      objectReference: {fileID: 0}
+    - target: {fileID: 407611041613852479, guid: a1f08408633d9e246a24db86e6b317e9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2608466748762800986, guid: a1f08408633d9e246a24db86e6b317e9,
         type: 3}

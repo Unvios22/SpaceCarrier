@@ -7,7 +7,7 @@ namespace Installers {
 		public override void InstallBindings() {
 			var worldEntitySystem = new WorldEntitySystem<Model.WorldEntity>();
 			Container.BindInterfacesAndSelfTo<WorldEntitySystem<Model.WorldEntity>>().FromInstance(worldEntitySystem);
-			Container.Bind<ShipFactory>().AsSingle();
+			Container.Bind<ShipFactory>().To<TestShipFactory>().AsSingle();
 		}
 	}
 }

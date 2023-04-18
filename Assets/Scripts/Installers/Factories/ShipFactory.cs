@@ -3,22 +3,22 @@ using Model;
 using Zenject;
 
 namespace Installers.Factories {
-	public class ShipFactory : IFactory<Ship> {
+	public abstract class ShipFactory : IFactory<Ship> {
 
-		private WorldEntitySystem<Model.WorldEntity> _worldEntitySystem;
+		protected WorldEntitySystem<Model.WorldEntity> WorldEntitySystem;
 
 		public ShipFactory(WorldEntitySystem<Model.WorldEntity> worldEntitySystem) {
-			_worldEntitySystem = worldEntitySystem;
+			WorldEntitySystem = worldEntitySystem;
 		}
 
-		public Ship Create() {
+		public virtual Ship Create() {
 			var ship = new Ship();
 			RegisterShipToSystem(ship);
-			return new Ship();
+			return ship;
 		}
 
 		private void RegisterShipToSystem(Ship ship) {
-			_worldEntitySystem.RegisterEntity(ship);
+			WorldEntitySystem.RegisterEntity(ship);
 		}
 	}
 }
