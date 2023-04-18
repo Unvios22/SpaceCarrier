@@ -1068,20 +1068,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1424073693}
     m_Modifications:
-    - target: {fileID: 1712497666360277583, guid: d25798648d84441448fedd6e95649fab,
-        type: 3}
-      propertyPath: zPosition
-      value: -2
-      objectReference: {fileID: 0}
     - target: {fileID: 4733342882210219736, guid: d25798648d84441448fedd6e95649fab,
         type: 3}
       propertyPath: m_Name
       value: SelectionBox
-      objectReference: {fileID: 0}
-    - target: {fileID: 4984786485734034415, guid: d25798648d84441448fedd6e95649fab,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 999
       objectReference: {fileID: 0}
     - target: {fileID: 5275579986359554143, guid: d25798648d84441448fedd6e95649fab,
         type: 3}

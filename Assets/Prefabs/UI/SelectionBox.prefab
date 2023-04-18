@@ -74,7 +74,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 999
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -153,3 +153,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boxOutlineColor: {r: 1, g: 1, b: 1, a: 0.6117647}
   boxLineRenderer: {fileID: 4984786485734034415}
+  zPosition: -2

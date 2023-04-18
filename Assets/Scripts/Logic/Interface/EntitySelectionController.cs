@@ -22,7 +22,7 @@ namespace Logic.Interface {
 		private bool _isDrawingBox;
 		private bool _isSelectiveSelection;
 		
-		private Vector3[] _selectionBoxVertices;
+		private Vector2[] _selectionBoxVertices;
 		
 		[ShowInInspector]
 		private SelectableEntityList<ISelectableEntity> _currentlySelectedEntities;
@@ -49,6 +49,7 @@ namespace Logic.Interface {
 			}
 
 			if (_isDrawingBox) {
+				UpdateSelectionBoxVertices();
 				DrawSelectionBox();
 			}
 			
@@ -68,13 +69,16 @@ namespace Logic.Interface {
 			_isSelectiveSelection = Input.GetKey(KeyCode.LeftShift);
 		}
 
-		private void DrawSelectionBox() {
+		private void UpdateSelectionBoxVertices() {
 			var v1 = _selectionOrigin;
 			var v3 = _mousePos;
 			var v2 = new Vector2(v3.x, v1.y);
 			var v4 = new Vector2(v1.x, v3.y);
 			
-			_selectionBoxVertices = new Vector3[] { v1, v2, v3, v4 };
+			_selectionBoxVertices = new Vector2[] { v1, v2, v3, v4 };
+		}
+		
+		private void DrawSelectionBox() {
 			selectionBoxController.SetSelectionBoxVertices(_selectionBoxVertices);
 		}
 
@@ -94,7 +98,7 @@ namespace Logic.Interface {
 		}
 
 		private List<ISelectableEntity> DoBoxSelection() {
-			var colliderVertices = _selectionBoxVertices.Select(x => (Vector2)x).ToArray();
+			var colliderVertices = _selectionBoxVertices;
 			var castDirection = playerCamera.transform.forward;
 			return selectableEntityPhysicsCaster.CastPolygonForSelectableEntities(colliderVertices, castDirection);
 		}
