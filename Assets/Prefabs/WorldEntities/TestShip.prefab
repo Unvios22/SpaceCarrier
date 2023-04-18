@@ -107,10 +107,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _destroyer
-      Entry: 6
-      Data: 
+    SerializationNodes: []
   selectionMarker: {fileID: 5036874907533227727}
 --- !u!61 &8959364408589602740
 BoxCollider2D:

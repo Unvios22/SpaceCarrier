@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using EntityData;
+using Logic.Systems;
 using Sirenix.OdinInspector;
+using Zenject;
 
 namespace Model {
 	[Serializable]
 	public abstract class WorldEntity {
+		
 		[ShowInInspector] private int _bearing;
 		[ShowInInspector] private Position _position;
 		[ShowInInspector] private float _speed;
@@ -36,7 +39,7 @@ namespace Model {
 
 		public float Speed {
 			get => _speed;
-			set => _speed = value;
+			protected set => _speed = value;
 		}
 	}
 }

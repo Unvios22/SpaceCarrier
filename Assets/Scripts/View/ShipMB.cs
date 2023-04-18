@@ -1,17 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using Installers.Factories;
 using Model;
-using Ships;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Zenject;
 
 namespace View {
 	public class ShipMB : SerializedMonoBehaviour, ISelectableEntity {
-		[SerializeField] private Ship _destroyer;
+		
 		[SerializeField] private GameObject selectionMarker;
+		
+		private Ship _ship;
+
+		[Inject]
+		private void Init(ShipFactory factory) {
+			_ship = factory.Create();
+		}
 
 		private void Start() {
 			selectionMarker.SetActive(false);
-			_destroyer = new TestDestroyer("shipName", new List<Weapon>(), new List<Model.Personnel>(), 200f, 100);
 		}
 
 		public void DisplaySelectionMarker() {
