@@ -75,7 +75,7 @@ namespace Logic.Interface {
 			var v2 = new Vector2(v3.x, v1.y);
 			var v4 = new Vector2(v1.x, v3.y);
 			
-			_selectionBoxVertices = new Vector2[] { v1, v2, v3, v4 };
+			_selectionBoxVertices = new[] { v1, v2, v3, v4 };
 		}
 		
 		private void DrawSelectionBox() {
@@ -113,10 +113,13 @@ namespace Logic.Interface {
 			if (entitiesInSelection.IsNullOrEmpty()) {
 				return;
 			}
-			InvertSelectionStatus(entitiesInSelection);
-			
-			//TODO: refactor to be more adaptable - if selective and there are both selected and unselected units in selection, only add more
-			//if selective and only already selected units are in selection, then remove them
+			var unselectedEntitiesInSelection = entitiesInSelection.FindAll(x => !_currentlySelectedEntities.Contains(x));
+				
+			if (unselectedEntitiesInSelection.Count > 0) {
+				unselectedEntitiesInSelection.ForEach(x => _currentlySelectedEntities.Add(x));
+			} else {
+				entitiesInSelection.ForEach(x => _currentlySelectedEntities.Remove(x));
+			}
 		}
 
 		private void HandleNonselectiveSelection(List<ISelectableEntity> entitiesInSelection) {
@@ -125,16 +128,6 @@ namespace Logic.Interface {
 			} else {
 				_currentlySelectedEntities.Clear();
 				_currentlySelectedEntities = new SelectableEntityList<ISelectableEntity>(entitiesInSelection);
-			}
-		}
-
-		private void InvertSelectionStatus(List<ISelectableEntity> entities) {
-			foreach (var entity in entities) {
-				if (_currentlySelectedEntities.Contains(entity)) {
-					_currentlySelectedEntities.Remove(entity);
-				} else {
-					_currentlySelectedEntities.Add(entity);
-				}
 			}
 		}
 		
