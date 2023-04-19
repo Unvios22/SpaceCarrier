@@ -7,7 +7,6 @@ namespace Model {
 	[Serializable]
 	public class Ship : WorldEntity {
 		
-		[ShowInInspector] private string _name;
 		[ShowInInspector] private List<Weapon> _armaments;
 		[ShowInInspector] private List<Personnel> _personnel;
 		[ShowInInspector] private float _topSpeed;

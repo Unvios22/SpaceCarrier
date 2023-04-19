@@ -1,22 +1,38 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
+using View.EntityWidgets;
 
 namespace View {
 	public abstract class WorldEntityMB <T> : SerializedMonoBehaviour where T: Model.WorldEntity {
-
-		[ShowInInspector] protected T Entity;
 		
+		//TODO: move to IconDisplayWidget?
+		[SerializeField] private Sprite entityIcon;
+		[SerializeField] private SpriteRenderer entityIconSlot;
+		
+		[SerializeField] private NavigationStatsDisplayWidget navigationStatsDisplayWidget;
+		
+		[ShowInInspector] protected T Entity;
+
 		//TODO implement here a generic inject method that will get injected with factory and set the Entity
 		//according to actual WorldEntity inheriting type in inheriting class
 		
-		public void Update() {
-			UpdateEntityInWorldSpace(Entity);
+		private void Start() {
+			entityIconSlot.sprite = entityIcon;
 		}
 
-		protected void UpdateEntityInWorldSpace(T entity) {
+		public void Update() {
+			UpdateEntityInWorldSpace(Entity);
+			navigationStatsDisplayWidget.SetEntityNavigationValues(Entity.Bearing, Entity.Speed);
+			AlignEntityIconToCamera();
+		}
+
+		protected virtual void UpdateEntityInWorldSpace(T entity) {
 			UpdateEntityPosition(entity);
 			UpdateEntityRotation(entity);
-			
+		}
+
+		private void AlignEntityIconToCamera() {
+			entityIconSlot.transform.rotation = Quaternion.identity;
 		}
 
 		private void UpdateEntityPosition(T entity) {

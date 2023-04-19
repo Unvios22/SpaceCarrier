@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Model;
 
-namespace Logic.Interface {
+namespace Logic.Interface.EntitySelection {
 	public class SelectableEntityList<T> : List<T> where T : ISelectableEntity{
 
 		public SelectableEntityList() { }

@@ -891,7 +891,7 @@ MonoBehaviour:
   dragSpeed: 1
   zoomSpeed: 1.3
   minZoom: 3
-  maxZoom: 35
+  maxZoom: 100
   zoomCursorConvergenceStrength: 0.15
 --- !u!4 &1182096510
 Transform:

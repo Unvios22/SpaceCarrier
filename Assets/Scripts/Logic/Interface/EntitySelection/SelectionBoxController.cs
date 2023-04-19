@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Logic.Interface {
+namespace Logic.Interface.EntitySelection {
 	public class SelectionBoxController : MonoBehaviour {
 
 		[SerializeField] private Color boxOutlineColor = Color.white;

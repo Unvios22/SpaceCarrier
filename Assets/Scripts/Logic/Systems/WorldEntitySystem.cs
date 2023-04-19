@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Logic.Systems {
 	public class WorldEntitySystem<T> : System<T> where T : Model.WorldEntity {
 		
-		private const float EntityMovementScale = 0.01f;
+		private const float EntityMovementScale = 0.004f;
 		//TODO: refactor as some settings obj, preferably also visible in editor
 		
 		protected override void TickEntity(T entity) {

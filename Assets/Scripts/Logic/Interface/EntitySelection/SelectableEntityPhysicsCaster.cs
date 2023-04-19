@@ -4,7 +4,7 @@ using Model;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace Logic.Interface {
+namespace Logic.Interface.EntitySelection {
 	public class SelectableEntityPhysicsCaster : MonoBehaviour {
 		[SerializeField] private PolygonCollider2D selectionCollider;
 

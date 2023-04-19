@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Model;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace Logic.Interface {
+namespace Logic.Interface.EntitySelection {
 	public class EntitySelectionController : MonoBehaviour {
 
 		[SerializeField] private Camera playerCamera;

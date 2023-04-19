@@ -2,15 +2,14 @@
 using System;
 using System.Collections.Generic;
 using EntityData;
-using Logic.Systems;
 using Sirenix.OdinInspector;
-using Zenject;
 using Random = UnityEngine.Random;
 
 namespace Model {
 	[Serializable]
 	public abstract class WorldEntity {
-		
+
+		[ShowInInspector] private string _name;
 		[ShowInInspector] private int _bearing;
 		[ShowInInspector] private Position _position;
 		[ShowInInspector] private float _speed;
@@ -35,6 +34,11 @@ namespace Model {
 
 		public void SetRandomSpeed(float min, float max) {
 			Speed = Random.Range(min, max);
+		}
+		
+		public string Name {
+			get => _name;
+			set => _name = value;
 		}
 		
 		public Position Position {
