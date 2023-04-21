@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using EntityData;
+using Model.Entities.EntityData;
 using Sirenix.OdinInspector;
 using Random = UnityEngine.Random;
 

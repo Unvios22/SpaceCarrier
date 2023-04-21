@@ -4,21 +4,27 @@ using Zenject;
 
 namespace Installers.Factories {
 	public abstract class ShipFactory : IFactory<Ship> {
+		
+		//TODO: refactor as dedicated zenject abstract factory
 
-		protected WorldEntitySystem<Model.WorldEntity> WorldEntitySystem;
+		protected WorldEntitySystem WorldEntitySystem;
+		protected CommandableEntitySystem CommandableEntitySystem;
 
-		public ShipFactory(WorldEntitySystem<Model.WorldEntity> worldEntitySystem) {
+		public ShipFactory(WorldEntitySystem worldEntitySystem, CommandableEntitySystem commandableEntitySystem) {
 			WorldEntitySystem = worldEntitySystem;
+			CommandableEntitySystem = commandableEntitySystem;
 		}
 
 		public virtual Ship Create() {
+			//TODO: add factory for commandables
 			var ship = new Ship();
-			RegisterShipToSystem(ship);
+			RegisterShipToSystems(ship);
 			return ship;
 		}
 
-		private void RegisterShipToSystem(Ship ship) {
+		private void RegisterShipToSystems(Ship ship) {
 			WorldEntitySystem.RegisterEntity(ship);
+			CommandableEntitySystem.RegisterEntity(ship);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 using Model;
 
 namespace Logic.Interface.EntitySelection {
-	public class SelectableEntityList<T> : List<T> where T : ISelectableEntity{
+	public class SelectableEntityList<T> : List<T> where T : ISelectableEntityMB{
 
 		public SelectableEntityList() { }
 		

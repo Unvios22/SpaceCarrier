@@ -5,7 +5,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Logic.Interface.EntitySelection {
-	public class EntitySelectionController : MonoBehaviour {
+	public class EntitySelectionController : MonoBehaviour, ISelectionController {
 
 		[SerializeField] private Camera playerCamera;
 		[SerializeField] private SelectionBoxController selectionBoxController;
@@ -24,10 +24,10 @@ namespace Logic.Interface.EntitySelection {
 		private Vector2[] _selectionBoxVertices;
 		
 		[ShowInInspector]
-		private SelectableEntityList<ISelectableEntity> _currentlySelectedEntities;
+		private SelectableEntityList<ISelectableEntityMB> _currentlySelectedEntities;
 
 		private void Start() {
-			_currentlySelectedEntities = new SelectableEntityList<ISelectableEntity>();
+			_currentlySelectedEntities = new SelectableEntityList<ISelectableEntityMB>();
 		}
 
 		private void Update() {
@@ -82,7 +82,7 @@ namespace Logic.Interface.EntitySelection {
 		}
 
 		private void HandleEntitySelection() {
-			List<ISelectableEntity> entitiesInSelection;
+			List<ISelectableEntityMB> entitiesInSelection;
 			if (_isDrawingBox) {
 				entitiesInSelection = DoBoxSelection();
 			} else {
@@ -96,19 +96,19 @@ namespace Logic.Interface.EntitySelection {
 			}
 		}
 
-		private List<ISelectableEntity> DoBoxSelection() {
+		private List<ISelectableEntityMB> DoBoxSelection() {
 			var colliderVertices = _selectionBoxVertices;
 			var castDirection = playerCamera.transform.forward;
 			return selectableEntityPhysicsCaster.CastPolygonForSelectableEntities(colliderVertices, castDirection);
 		}
 
-		private List<ISelectableEntity> DoClickSelection() {
+		private List<ISelectableEntityMB> DoClickSelection() {
 			var raycastOrigin = _mousePos;
 			var raycastDirection = playerCamera.transform.forward;
 			return selectableEntityPhysicsCaster.CastRayForSelectableEntities(raycastOrigin, raycastDirection);
 		}
 		
-		private void HandleSelectiveSelection(List<ISelectableEntity> entitiesInSelection) {
+		private void HandleSelectiveSelection(List<ISelectableEntityMB> entitiesInSelection) {
 			if (entitiesInSelection.IsNullOrEmpty()) {
 				return;
 			}
@@ -121,17 +121,19 @@ namespace Logic.Interface.EntitySelection {
 			}
 		}
 
-		private void HandleNonselectiveSelection(List<ISelectableEntity> entitiesInSelection) {
+		private void HandleNonselectiveSelection(List<ISelectableEntityMB> entitiesInSelection) {
 			if (entitiesInSelection.IsNullOrEmpty()) {
 				_currentlySelectedEntities.Clear();
 			} else {
 				_currentlySelectedEntities.Clear();
-				_currentlySelectedEntities = new SelectableEntityList<ISelectableEntity>(entitiesInSelection);
+				_currentlySelectedEntities = new SelectableEntityList<ISelectableEntityMB>(entitiesInSelection);
 			}
 		}
 		
 		private void ClearSelectionBox() {
 			selectionBoxController.ClearSelectionVertices();
 		}
+
+		public SelectableEntityList<ISelectableEntityMB> CurrentlySelectedEntities => _currentlySelectedEntities;
 	}
 }

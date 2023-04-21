@@ -1,5 +1,5 @@
 ﻿namespace Model {
-	public interface ISelectableEntity {
+	public interface ISelectableEntityMB {
 		public void DisplaySelectionMarker();
 		public void HideSelectionMarker();
 	}

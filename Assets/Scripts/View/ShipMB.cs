@@ -5,7 +5,10 @@ using View.EntityWidgets;
 using Zenject;
 
 namespace View {
-	public class ShipMB : WorldEntityMB<Ship>, ISelectableEntity {
+	public class ShipMB : WorldEntityMB<Ship>, ISelectableEntityMB, ICommandableEntityMB {
+		
+		//TODO: refactor the naming convention as: (EntityType)ViewMB & I(EntityInterfaceType)View ?
+		//TODO: refactor the MB interfaces as data on the Entity object
 		
 		//TODO: refactor selection marker as widget
 		[SerializeField] private GameObject selectionMarker;
@@ -27,6 +30,10 @@ namespace View {
 
 		public void HideSelectionMarker() {
 			selectionMarker.SetActive(false);
+		}
+
+		public ICommandableEntity GetEntityAsCommandableEntity() {
+			return Entity;
 		}
 	}
 }

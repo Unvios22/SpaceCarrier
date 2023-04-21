@@ -5,7 +5,8 @@ using Model;
 namespace Installers.Factories {
 	public class TestShipFactory : ShipFactory {
 		
-		public TestShipFactory(WorldEntitySystem<Model.WorldEntity> worldEntitySystem) : base(worldEntitySystem) { }
+		public TestShipFactory(WorldEntitySystem worldEntitySystem, CommandableEntitySystem commandableEntitySystem)
+			: base(worldEntitySystem, commandableEntitySystem) { }
 		
 		public override Ship Create() {
 			var ship = base.Create();
