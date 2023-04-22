@@ -1,5 +1,5 @@
 ﻿namespace Model.Entity {
-	public abstract class MovableEntity : WorldEntity {
+	public abstract class MovableEntity : Entities.WorldEntity {
 		
 	}
 }

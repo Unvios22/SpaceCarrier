@@ -1,22 +1,23 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Model.Entities.EntityData;
 using Sirenix.OdinInspector;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Model {
+namespace Model.Entities {
 	[Serializable]
 	public abstract class WorldEntity {
 
 		[ShowInInspector] private string _name;
-		[ShowInInspector] private int _bearing;
-		[ShowInInspector] private Position _position;
+		[ShowInInspector] private EntityPosition _entityPosition;
+		[ShowInInspector] private EntityRotation _entityRotation;
 		[ShowInInspector] private float _speed;
 		[ShowInInspector] private List<Modifier<IModifierAffectable>> _modifiers;
 
 		public WorldEntity() {
-			_position = new Position();
+			_entityPosition = new EntityPosition();
+			_entityRotation = new EntityRotation();
 			_modifiers = new List<Modifier<IModifierAffectable>>();
 		}
 		
@@ -28,8 +29,9 @@ namespace Model {
 			_modifiers.Remove(modifier);
 		}
 
-		public void SetRandomBearing() {
-			Bearing = Random.Range(0, 360);
+		public void SetRandomRotation() {
+			var randomAngle = Random.Range(0, 360);
+			EntityRotation.WorldRotation = new Vector3(0, 0, randomAngle);
 		}
 
 		public void SetRandomSpeed(float min, float max) {
@@ -41,19 +43,14 @@ namespace Model {
 			set => _name = value;
 		}
 		
-		public Position Position {
-			get => _position;
-			set => _position = value;
+		public EntityPosition EntityPosition {
+			get => _entityPosition;
+			set => _entityPosition = value;
 		}
 
-		public int Bearing {
-			get => _bearing;
-			set {
-				if (value is < 0 or > 360) {
-					throw new ArgumentException("Input bearing exceeds limit!");
-				}
-				_bearing = value;
-			}
+		public EntityRotation EntityRotation {
+			get => _entityRotation;
+			set => _entityRotation = value;
 		}
 
 		public float Speed {

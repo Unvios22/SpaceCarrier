@@ -3,7 +3,7 @@ using UnityEngine;
 using View.EntityWidgets;
 
 namespace View {
-	public abstract class WorldEntityMB <T> : SerializedMonoBehaviour where T: Model.WorldEntity {
+	public abstract class WorldEntityMB <T> : SerializedMonoBehaviour where T: Model.Entities.WorldEntity {
 		
 		//TODO: move to IconDisplayWidget?
 		[SerializeField] private Sprite entityIcon;
@@ -11,7 +11,7 @@ namespace View {
 		
 		[SerializeField] private NavigationStatsDisplayWidget navigationStatsDisplayWidget;
 		
-		[ShowInInspector] protected T Entity;
+		[ShowInInspector] private T _entity;
 
 		//TODO implement here a generic inject method that will get injected with factory and set the Entity
 		//according to actual WorldEntity inheriting type in inheriting class
@@ -22,7 +22,7 @@ namespace View {
 
 		public void Update() {
 			UpdateEntityInWorldSpace(Entity);
-			navigationStatsDisplayWidget.SetEntityNavigationValues(Entity.Bearing, Entity.Speed);
+			navigationStatsDisplayWidget.SetEntityNavigationValues(Entity.EntityRotation, Entity.Speed);
 			AlignEntityIconToCamera();
 		}
 
@@ -36,13 +36,17 @@ namespace View {
 		}
 
 		private void UpdateEntityPosition(T entity) {
-			transform.position = entity.Position.WorldPosition;
+			transform.position = entity.EntityPosition.WorldPosition;
 		}
 
 		private void UpdateEntityRotation(T entity) {
-			var currentRotation = transform.rotation;
-			var desiredRotation = new Vector3(currentRotation.x, currentRotation.y, entity.Bearing);
+			var desiredRotation = entity.EntityRotation.WorldRotation;
 			transform.rotation = Quaternion.Euler(desiredRotation);
+		}
+		
+		public T Entity {
+			get => _entity;
+			set => _entity = value;
 		}
 	}
 }

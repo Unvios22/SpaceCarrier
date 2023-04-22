@@ -1,31 +1,33 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using WorldEntity;
 
 namespace Model.Entities.EntityData {
-	public class Position {
+	[Serializable]
+	public class EntityPosition {
 		
-		private Vector3 _worldPosition;
-		private GridPosition _gridPosition;
+		[ShowInInspector] private Vector2 _worldPosition;
+		[ShowInInspector] private GridPosition _gridPosition;
 
-		public Position(){}
+		public EntityPosition(){}
 		
-		public Position(Vector3 worldPosition, GridPosition gridPosition) {
+		public EntityPosition(Vector2 worldPosition, GridPosition gridPosition) {
 			_worldPosition = worldPosition;
 			_gridPosition = gridPosition;
 		}
 
-		public Position(Vector3 worldPosition) {
+		public EntityPosition(Vector2 worldPosition) {
 			_worldPosition = worldPosition;
 		}
 		
-		public Position(GridPosition gridPosition) {
+		public EntityPosition(GridPosition gridPosition) {
 			_gridPosition = gridPosition;
 			throw new NotImplementedException();
 			_worldPosition = GridToWorldPositon(gridPosition);
 		}
 
-		private GridPosition WorldToGridPositon(Vector3 worldPosition) {
+		private GridPosition WorldToGridPositon(Vector2 worldPosition) {
 			//TODO
 			throw new NotImplementedException();
 		}
@@ -35,7 +37,7 @@ namespace Model.Entities.EntityData {
 			throw new NotImplementedException();
 		}
 		
-		public Vector3 WorldPosition {
+		public Vector2 WorldPosition {
 			get => _worldPosition;
 			set => _worldPosition = value;
 		}

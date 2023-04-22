@@ -8,13 +8,13 @@ namespace Logic.Interface.EntitySelection {
 	public class SelectableEntityPhysicsCaster : MonoBehaviour {
 		[SerializeField] private PolygonCollider2D selectionCollider;
 
-		public List<ISelectableEntity> CastPolygonForSelectableEntities(Vector2[] vertices, Vector3 castDirection) {
+		public List<ISelectableEntityMB> CastPolygonForSelectableEntities(Vector2[] vertices, Vector3 castDirection) {
 			var hitResults = CastPolygonToWorldSpace(vertices, castDirection);
 			var selectableEntities = FilterHitResults(hitResults);
 			return selectableEntities;
 		}
 
-		public List<ISelectableEntity> CastRayForSelectableEntities(Vector3 origin, Vector3 direction) {
+		public List<ISelectableEntityMB> CastRayForSelectableEntities(Vector3 origin, Vector3 direction) {
 			var hitResults = Physics2D.RaycastAll(origin, direction).ToList();
 			var selectableEntities = FilterHitResults(hitResults);
 			if (selectableEntities.Count > 0) {
@@ -30,21 +30,20 @@ namespace Logic.Interface.EntitySelection {
 			return hitResults;
 		}
 		
-		private List<ISelectableEntity> FilterHitResults(List<RaycastHit2D> hitResults) {
-			var selectedEntities = new List<ISelectableEntity>();
+		private List<ISelectableEntityMB> FilterHitResults(List<RaycastHit2D> hitResults) {
+			var selectedEntities = new List<ISelectableEntityMB>();
 			
 			if (hitResults.IsNullOrEmpty()) {
 				return selectedEntities;
 			}
 			
 			foreach (var result in hitResults) {
-				var resultSelectableEntities = result.transform.GetComponentsInChildren<ISelectableEntity>();
+				var resultSelectableEntities = result.transform.GetComponentsInChildren<ISelectableEntityMB>();
 				if (resultSelectableEntities.Length != 0) {
 					resultSelectableEntities.ForEach(x => selectedEntities.Add(x));
 				}
 			}
 			return selectedEntities;
 		}
-		
 	}
 }

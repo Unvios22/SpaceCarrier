@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Model.Entities.EntityData;
+using TMPro;
 using UnityEngine;
 
 namespace View.EntityWidgets {
@@ -15,11 +16,11 @@ namespace View.EntityWidgets {
 		private const string EntitySpeedUnit = "kt";
 		
 		private Transform _transform;
-		private int _entityBearing;
+		private EntityRotation _entityRotation;
 		private float _entitySpeed;
-
-		public void SetEntityNavigationValues(int bearing, float speed) {
-			_entityBearing = bearing;
+		
+		public void SetEntityNavigationValues(EntityRotation entityRotation, float speed) {
+			_entityRotation = entityRotation;
 			_entitySpeed = speed;
 		}
 		
@@ -34,7 +35,7 @@ namespace View.EntityWidgets {
 			lineRenderer.endColor = bearingLineColor;
 		}
 		
-		private void Update() {
+		private void LateUpdate() {
 			UpdateLineRenderer();
 			UpdateTextDisplay();
 			//TODO: add possibility for bearing display to be disabled
@@ -46,9 +47,9 @@ namespace View.EntityWidgets {
 		}
 
 		private Vector3[] ConstructLineVertices() {
-			var towardsBearingMoveVector = _transform.right;
-			var v1 = _transform.position + (towardsBearingMoveVector * lineStartOffset);
-			var v2 = v1 + (towardsBearingMoveVector * lineLength);
+			var towardsBearingDirection = _transform.right;
+			var v1 = _transform.position + (towardsBearingDirection * lineStartOffset);
+			var v2 = v1 + (towardsBearingDirection * lineLength);
 			
 			return new [] { v1, v2 };
 		}
@@ -65,7 +66,7 @@ namespace View.EntityWidgets {
 		}
 
 		private string ConstructNavigationDataText() {
-			return _entityBearing + "\n" + _entitySpeed.ToString("0.#") + " " + EntitySpeedUnit;
+			return _entityRotation.Bearing + "\n" + _entitySpeed.ToString("0.#") + " " + EntitySpeedUnit;
 		}
 	}
 }
