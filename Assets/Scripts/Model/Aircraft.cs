@@ -2,7 +2,7 @@
 using Personnel;
 
 namespace Model {
-	public abstract class Aircraft : WorldEntity {
+	public abstract class Aircraft : Entities.WorldEntity {
 		
 		private List<Weapon> _armaments;
 		private string _name;
