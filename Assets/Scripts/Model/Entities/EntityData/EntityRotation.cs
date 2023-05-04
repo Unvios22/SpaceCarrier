@@ -19,6 +19,7 @@ namespace Model.Entities.EntityData {
 		
 		//TODO: is doing this through properties the right/readable way? Constructor maybe?
 		
+		//TODO: refactor as Quaternion?
 		public Vector3 WorldRotation {
 			get => _worldRotation;
 			set {

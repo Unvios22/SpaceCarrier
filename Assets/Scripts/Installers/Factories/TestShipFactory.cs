@@ -14,6 +14,6 @@ namespace Installers.Factories {
 			ship.SetRandomRotation();
 			ship.SetRandomSpeed(0f, 12f);
 			return ship;
-		}
+			}
 	}
 }
