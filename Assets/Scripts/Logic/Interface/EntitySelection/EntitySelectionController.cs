@@ -3,6 +3,7 @@ using Model;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using Zenject;
 
 namespace Logic.Interface.EntitySelection {
 	public class EntitySelectionController : MonoBehaviour, ISelectionController {
@@ -11,66 +12,84 @@ namespace Logic.Interface.EntitySelection {
 		[SerializeField] private SelectionBoxController selectionBoxController;
 		[SerializeField] private SelectableEntityPhysicsCaster selectableEntityPhysicsCaster;
 
-		private const float DragDistanceToStartBoxSelection = 2f;
+		private const float BoxSelectionActivationDiagonalLength = 0.7f;
 		
-		private Vector2 _mousePos;
-		private Vector2 _selectionOrigin;
-		
-		private bool _isMouseDown;
-		private bool _isSelecting;
-		private bool _isDrawingBox;
-		private bool _isSelectiveSelection;
-		
+		private Vector2 _boxSelectionOriginPos;
 		private Vector2[] _selectionBoxVertices;
+
+		private PlayerInputProcessor _playerInputProcessor;
+
+		private bool _isBoxSelectionActivated;
 		
 		[ShowInInspector]
 		private SelectableEntityList<ISelectableEntityMB> _currentlySelectedEntities;
+
+		[Inject]
+		private void Init(PlayerInputProcessor playerInputProcessor) {
+			//TODO: provide some interface instead of direct class reference?
+			//Either on the SelectionController (XYZ consumer) or InputProcessor (XYZ provider) and provide
+			//auto subscribe and unsubscribe events accordingly
+			
+			_playerInputProcessor = playerInputProcessor;
+			SubscribeToInputProcessorEvents();
+		}
+
+		private void SubscribeToInputProcessorEvents() {
+			_playerInputProcessor.EntityClickSelectionPerformed += OnEntityClickSelectionPerformed;
+			_playerInputProcessor.EntityBoxSelectionStarted += OnEntityBoxSelectionStarted;
+			_playerInputProcessor.EntityBoxSelectionPerformed += OnEntityBoxSelectionPerformed;
+			_playerInputProcessor.EntityBoxSelectionCancelled += OnEntityBoxSelectionCancelled;
+		}
 
 		private void Start() {
 			_currentlySelectedEntities = new SelectableEntityList<ISelectableEntityMB>();
 		}
 
-		private void Update() {
-			ReadPlayerInput();
-			
-			//TODO: refactor this as a state machine or at least an enum
-			
-			if (_isMouseDown && !_isSelecting) {
-				_selectionOrigin = _mousePos;
-				_isSelecting = true;
+		private void OnEntityClickSelectionPerformed(Vector2 pointerScreenPos, bool isSelectiveSelection) {
+			if (_isBoxSelectionActivated) {
+				return;
 			}
-			
-			if (_isSelecting) {
-				var distanceDragged = Vector2.Distance(_selectionOrigin, _mousePos);
-				if (distanceDragged > DragDistanceToStartBoxSelection) {
-					_isDrawingBox = true;
-				}
-			}
+			var pointerWorldPos = ParsePointerScreenToWorldPos(pointerScreenPos);
+			Debug.DrawLine(playerCamera.transform.position, pointerWorldPos);
+			var entitiesInSelection = CastForClickSelection(pointerWorldPos);
+			HandleEntitySelection(entitiesInSelection, isSelectiveSelection);
+		}
+		
+		private void OnEntityBoxSelectionStarted(Vector2 pointerScreenPos) {
+			_boxSelectionOriginPos = ParsePointerScreenToWorldPos(pointerScreenPos);
+		}
+		
+		private void OnEntityBoxSelectionPerformed(Vector2 pointerScreenPos) {
+			var currentPointerWorldPos = ParsePointerScreenToWorldPos(pointerScreenPos);
 
-			if (_isDrawingBox) {
-				UpdateSelectionBoxVertices();
+			if (!_isBoxSelectionActivated) {
+				if (IsPointerPastBoxSelectionThreshold(currentPointerWorldPos)) {
+					_isBoxSelectionActivated = true;
+				}
+			} else {
+				UpdateSelectionBoxVertices(currentPointerWorldPos);
 				DrawSelectionBox();
 			}
-			
-			if (_isSelecting && !_isMouseDown) {
-				HandleEntitySelection();
-				ClearSelectionBox();
-				_isSelecting = false;
-				_isDrawingBox = false;
+		}
+
+		private bool IsPointerPastBoxSelectionThreshold(Vector2 pointerPos) {
+			return Vector3.Distance(_boxSelectionOriginPos, pointerPos) >
+			       BoxSelectionActivationDiagonalLength;
+		}
+		
+		private void OnEntityBoxSelectionCancelled(Vector2 pointerScreenPos, bool isSelectiveSelection) {
+			if (!_isBoxSelectionActivated) {
+				return;
 			}
+			var entitiesInSelection = CastForBoxSelection();
+			HandleEntitySelection(entitiesInSelection, isSelectiveSelection);
+			HideSelectionBox();
+			_isBoxSelectionActivated = false;
 		}
 
-		private void ReadPlayerInput() {
-			//TODO: refactor using dedicated input class & the new Unity input system
-			_isMouseDown = Input.GetKey(KeyCode.Mouse0);
-			var mouseScreenPos = Input.mousePosition;
-			_mousePos = playerCamera.ScreenToWorldPoint(mouseScreenPos);
-			_isSelectiveSelection = Input.GetKey(KeyCode.LeftShift);
-		}
-
-		private void UpdateSelectionBoxVertices() {
-			var v1 = _selectionOrigin;
-			var v3 = _mousePos;
+		private void UpdateSelectionBoxVertices(Vector2 currentPointerPos) {
+			var v1 = _boxSelectionOriginPos;
+			var v3 = currentPointerPos;
 			var v2 = new Vector2(v3.x, v1.y);
 			var v4 = new Vector2(v1.x, v3.y);
 			
@@ -80,30 +99,22 @@ namespace Logic.Interface.EntitySelection {
 		private void DrawSelectionBox() {
 			selectionBoxController.SetSelectionBoxVertices(_selectionBoxVertices);
 		}
-
-		private void HandleEntitySelection() {
-			List<ISelectableEntityMB> entitiesInSelection;
-			if (_isDrawingBox) {
-				entitiesInSelection = DoBoxSelection();
-			} else {
-				entitiesInSelection = DoClickSelection();
-			}
-			
-			if (_isSelectiveSelection) {
+		
+		private void HandleEntitySelection(List<ISelectableEntityMB> entitiesInSelection, bool isSelectiveSelection) {
+			if (isSelectiveSelection) {
 				HandleSelectiveSelection(entitiesInSelection);
 			} else {
 				HandleNonselectiveSelection(entitiesInSelection);
 			}
 		}
 
-		private List<ISelectableEntityMB> DoBoxSelection() {
+		private List<ISelectableEntityMB> CastForBoxSelection() {
 			var colliderVertices = _selectionBoxVertices;
 			var castDirection = playerCamera.transform.forward;
 			return selectableEntityPhysicsCaster.CastPolygonForSelectableEntities(colliderVertices, castDirection);
 		}
 
-		private List<ISelectableEntityMB> DoClickSelection() {
-			var raycastOrigin = _mousePos;
+		private List<ISelectableEntityMB> CastForClickSelection(Vector2 raycastOrigin) {
 			var raycastDirection = playerCamera.transform.forward;
 			return selectableEntityPhysicsCaster.CastRayForSelectableEntities(raycastOrigin, raycastDirection);
 		}
@@ -112,6 +123,7 @@ namespace Logic.Interface.EntitySelection {
 			if (entitiesInSelection.IsNullOrEmpty()) {
 				return;
 			}
+			
 			var unselectedEntitiesInSelection = entitiesInSelection.FindAll(x => !_currentlySelectedEntities.Contains(x));
 				
 			if (unselectedEntitiesInSelection.Count > 0) {
@@ -130,8 +142,12 @@ namespace Logic.Interface.EntitySelection {
 			}
 		}
 		
-		private void ClearSelectionBox() {
+		private void HideSelectionBox() {
 			selectionBoxController.ClearSelectionVertices();
+		}
+		
+		private Vector2 ParsePointerScreenToWorldPos(Vector2 screenPos) {
+			return playerCamera.ScreenToWorldPoint(screenPos);
 		}
 
 		public SelectableEntityList<ISelectableEntityMB> CurrentlySelectedEntities => _currentlySelectedEntities;

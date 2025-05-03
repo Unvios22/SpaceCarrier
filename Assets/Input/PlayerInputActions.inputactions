@@ -24,34 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "PointerClick",
-                    "type": "Value",
-                    "id": "cb4a5c07-9b20-4c71-b119-0a7f5cf06d69",
-                    "expectedControlType": "Analog",
-                    "processors": "",
-                    "interactions": "Tap",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "PointerClickDrag",
-                    "type": "Button",
-                    "id": "45ab8b90-5d69-48c0-b0b0-57f088b134d2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "47c26cba-6620-42d1-88ad-7631082cba96",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CameraMove",
+                    "name": "CameraPan",
                     "type": "Value",
                     "id": "7cfa4fb0-c5a7-455e-91b9-97bb3cc2a027",
                     "expectedControlType": "Axis",
@@ -60,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "DrawSelectionBox",
+                    "name": "DrawEntitySelectionBox",
                     "type": "Value",
                     "id": "7e3b53f7-f42b-4cf9-987b-3df3fd109ef3",
                     "expectedControlType": "Vector2",
@@ -69,13 +42,40 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SpecialSelection",
+                    "name": "ToggleSelectiveSelection",
                     "type": "Button",
                     "id": "f8bb6816-2fc5-460d-ae74-71a7f28ede05",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "TriggerClickSelectEntity",
+                    "type": "Button",
+                    "id": "084eaf3a-c7b0-4856-bb28-9c88b4d27e3e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TriggerClickGiveCommand",
+                    "type": "Button",
+                    "id": "96a8f451-4a50-4662-8f3c-c673119ba214",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CameraDrag",
+                    "type": "Button",
+                    "id": "38257d3a-856d-49e1-a626-efa3df2fb8fb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -102,46 +102,13 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "ef05ad36-0017-4894-9068-ae2e00e57e2d",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "PointerClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ed76596c-9f41-45aa-b065-7d011a0d6e44",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "PointerClickDrag",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0895c712-eeb9-4111-8e5e-fc8ed9158b5d",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "Middle click & drag",
                     "id": "d57dd7dd-2c74-40d7-9664-c4ac0349511e",
                     "path": "OneModifier",
                     "interactions": "",
-                    "processors": "InvertVector2,ScaleVector2(x=0.035,y=0.035)",
+                    "processors": "",
                     "groups": "",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -152,7 +119,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -163,7 +130,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -174,7 +141,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -185,7 +152,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -196,7 +163,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -207,7 +174,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -218,18 +185,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "CameraMove",
+                    "action": "CameraPan",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "One Modifier",
+                    "name": "LMB Click&Drag",
                     "id": "33933ea5-0a9f-4ed6-a434-8992f0c2158f",
                     "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DrawSelectionBox",
+                    "action": "DrawEntitySelectionBox",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -240,7 +207,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "DrawSelectionBox",
+                    "action": "DrawEntitySelectionBox",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -251,7 +218,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "DrawSelectionBox",
+                    "action": "DrawEntitySelectionBox",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -262,7 +229,40 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "SpecialSelection",
+                    "action": "ToggleSelectiveSelection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f3fc543-a3aa-4a61-b38b-d5a921c287fd",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee0dcde5-a811-4189-a873-2d8fb1174ca4",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "TriggerClickSelectEntity",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17afa8aa-c64f-4d5e-9dfd-1525adefff7a",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "TriggerClickGiveCommand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

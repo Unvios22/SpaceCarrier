@@ -12,8 +12,8 @@ namespace Installers.Factories {
 			var ship = base.Create();
 			ship.Name = NameList.GetRandomTestShipName();
 			ship.SetRandomRotation();
-			ship.SetRandomSpeed(0f, 12f);
+			ship.SetRandomSpeed(0f, 0.5f);
 			return ship;
-			}
+		}
 	}
 }
